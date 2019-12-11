@@ -4,15 +4,19 @@ MAINTAINER Upendra Devisetty <upendra@cyverse.org>
 RUN mkdir /cvmfs /work
 
 RUN apt-get update \
-    && apt-get install -y lsb curl apt-transport-https python3 python-requests libfuse2 wget gcc make libpcre3-dev libz-dev 
+    # These dependencies are specific for OSG
+    && apt-get install -y lsb curl apt-transport-https python3 python-requests libfuse2 \
+    # These dependencies are specific for fastq-sample tool
+    wget gcc make libpcre3-dev libz-dev 
 
 # Install fastq-tools
-RUN wget http://homes.cs.washington.edu/~dcjones/fastq-tools/fastq-tools-0.8.tar.gz
-RUN tar xvf fastq-tools-0.8.tar.gz
+RUN wget http://homes.cs.washington.edu/~dcjones/fastq-tools/fastq-tools-0.8.tar.gz && \
+    tar xvf fastq-tools-0.8.tar.gz
 WORKDIR fastq-tools-0.8
 RUN ./configure
-RUN  make install fastq==0.8
+RUN make install fastq==0.8
 
+# Install OSG specific tools
 WORKDIR /work
 
 # Define the iRODS package.
